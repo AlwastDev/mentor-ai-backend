@@ -1,0 +1,35 @@
+services:
+  mssql:
+    image: mcr.microsoft.com/mssql/server:latest
+    container_name: mentorai_mssql_auth_service
+    restart: always
+    environment:
+      SA_PASSWORD: "QsHdvFYoDu788zw"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssql_data:/var/opt/mssql
+
+  auth_service:
+    build:
+      context: .
+      dockerfile: Services/Auth/Auth.API/Dockerfile
+    container_name: mentorai_auth_service
+    depends_on:
+      - mssql
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=localhost,1433;Database=AuthDB;User Id=sa;Password=QsHdvFYoDu788zw;TrustServerCertificate=True;
+    ports:
+      - "5001:5000"
+    command: [ "dotnet", "MentorAI.AuthService.dll" ]
+  
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: mentorai_rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"
+
+volumes:
+  mssql_data:
