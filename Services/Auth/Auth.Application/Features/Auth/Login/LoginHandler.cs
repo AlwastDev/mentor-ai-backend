@@ -20,66 +20,71 @@ public class LoginHandler : IRequestHandler<LoginCommand, ResultResponse<AccessT
         _jwtFactory = jwtFactory;
     }
 
-    public async Task<ResultResponse<AccessTokenResponse>> Handle(LoginCommand request, CancellationToken cancellationToken)
+    public async Task<ResultResponse<AccessTokenResponse>> Handle(LoginCommand request,
+        CancellationToken cancellationToken)
     {
         var user = await _authRepository.GetAsync((u) => u.Email == request.Email);
 
-		if (user is null)
-		{
-			return new(ResultCode.Forbidden, "Your email or password is incorrect");
-		}
+        if (user is null)
+        {
+            return new(ResultCode.Forbidden, "Your email or password is incorrect");
+        }
 
-		var result = await _authRepository.CheckPasswordSignInAsync(user.Id, request.Password, false);
+        var result = await _authRepository.CheckPasswordSignInAsync(user.Id, request.Password, false);
 
-		if (result.IsLockedOut)
-		{
-			return new(ResultCode.LockedOut, "Your profile is blocked");
-		}
+        if (result.IsLockedOut)
+        {
+            return new(ResultCode.LockedOut, "Your profile is blocked");
+        }
 
-		if (!result.Succeeded)
-		{
-			return new(ResultCode.Forbidden, "Your email or password is incorrect");
-		}
+        if (!result.Succeeded)
+        {
+            return new(ResultCode.Forbidden, "Your email or password is incorrect");
+        }
 
-		// if (!user.EmailConfirmed)
-		// {
-		// 	return new(ResultCode.Forbidden, "Your email is not confirmed");
-		// }
+        // if (!user.EmailConfirmed)
+        // {
+        // 	return new(ResultCode.Forbidden, "Your email is not confirmed");
+        // }
 
-		var userClaims = await _authRepository.GetClaimsAsync(user.Id);
+        var userClaims = await _authRepository.GetClaimsAsync(user.Id);
 
-		if (userClaims is null)
-		{
-			return new(ResultCode.InternalServerError, "Get claims error");
-		}
+        if (userClaims is null)
+        {
+            return new(ResultCode.InternalServerError, "Get claims error");
+        }
 
-		if (userClaims.All(static claim => claim.Type != ClaimTypes.Role))
-		{
-			await _authRepository.AddClaimsAsync(user.Id,
-			[
-				new Claim(ClaimTypes.NameIdentifier, user.Id),
-					new Claim(ClaimTypes.Role, user.UserRole.ToString())
-			]);
+        if (userClaims.All(static claim => claim.Type != ClaimTypes.Role))
+        {
+            await _authRepository.AddClaimsAsync(user.Id,
+            [
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim(ClaimTypes.Role, user.UserRole.ToString()),
+            ]);
 
-			await _authRepository.CommitAsync();
-		}
+            await _authRepository.CommitAsync();
+        }
 
-		userClaims = userClaims
-			.Where(claim => !(claim.Type == ClaimTypes.Role && claim.Value != user.UserRole.ToString())).ToList();
+        userClaims = userClaims
+            .Where(claim => !(claim.Type == ClaimTypes.Role && claim.Value != user.UserRole.ToString())).ToList();
 
-		var accessToken = _jwtFactory.GenerateEncodedToken(userClaims, TokenType.AccessToken);
+        var accessToken = _jwtFactory.GenerateEncodedToken(userClaims, TokenType.AccessToken);
 
-		var refreshToken = _jwtFactory.GenerateEncodedToken(new List<Claim> { new(ClaimTypes.NameIdentifier, user.Id) },
-			TokenType.RefreshToken);
+        var refreshToken = _jwtFactory.GenerateEncodedToken(
+            new List<Claim>
+            {
+                new(ClaimTypes.NameIdentifier, user.Id),
+            },
+            TokenType.RefreshToken);
 
-		var response = new AccessTokenResponse(accessToken, refreshToken);
+        var response = new AccessTokenResponse(accessToken, refreshToken);
 
-		await _authRepository.SetAccessTokenIssueStateAsync(user.Id, true);
+        await _authRepository.SetAccessTokenIssueStateAsync(user.Id, true);
 
-		await _authRepository.UpdateLastActivityAsync(user.Id);
+        await _authRepository.UpdateLastActivityAsync(user.Id);
 
-		await _authRepository.CommitAsync();
+        await _authRepository.CommitAsync();
 
-		return new(ResultCode.Ok, response);
+        return new(ResultCode.Ok, response);
     }
 }

@@ -19,13 +19,13 @@ var builder = WebApplication.CreateBuilder(args);
 // builder.Services.AddGrpcClient<CustomerProtoService.CustomerProtoServiceClient>(c => c.Address = new Uri(builder.Configuration["GrpcSettings:CustomerUrl"]!));
 // builder.Services.AddScoped<CustomerGrpcService>();
 builder.Services.AddApplicationServices();
-builder.Services.AddInfrastructureServices(builder.Configuration);
-builder.Services.AddJwt();
-builder.Services.AddOptions(builder.Configuration);
-builder.Services.AddIdentity();
 builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddSingleton<IAuthorizationHandler, RoleHandler>();
 builder.Services.AddSingleton<Presenter>();
+builder.Services.AddJwt();
+builder.Services.AddOptions(builder.Configuration);
+builder.Services.AddIdentity();
+builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddSwagger();
 
 builder.Services.AddMvcCore(static mvcOptions => mvcOptions.EnableEndpointRouting = false)

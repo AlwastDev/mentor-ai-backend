@@ -17,6 +17,19 @@ public static class DiManager
 {
     internal static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
 	{
+		var secretKey = configuration["JwtIssuerOptions:SecretKey"];
+
+		if (string.IsNullOrWhiteSpace(secretKey))
+		{
+			throw new ArgumentNullException(nameof(secretKey), "JWT SecretKey is missing or empty in configuration.");
+		}
+
+		var keyBytes = Encoding.UTF8.GetBytes(secretKey);
+		if (keyBytes.Length < 64)
+		{
+			throw new ArgumentException("JWT SecretKey must be at least 512 bits (64 bytes) for HS512.");
+		}
+		
 		services.AddAuthentication(static cfg =>
 			{
 				cfg.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -26,17 +39,17 @@ public static class DiManager
 			{
 				cfg.RequireHttpsMetadata = false;
 				cfg.SaveToken = true;
-				cfg.Audience = configuration.GetSection("JwtIssuerOptions:Audience").Value;
-				cfg.ClaimsIssuer = configuration.GetSection("JwtIssuerOptions:Issuer").Value;
+				cfg.Audience = configuration["JwtIssuerOptions:Audience"];
+				cfg.ClaimsIssuer = configuration["JwtIssuerOptions:Issuer"];
 
 				cfg.TokenValidationParameters = new()
 				{
 					ValidateIssuerSigningKey = true,
-					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetSection("JwtIssuerOptions:SecretKey").Value!)),
+					IssuerSigningKey = new SymmetricSecurityKey(keyBytes),
 					ValidateIssuer = true,
-					ValidIssuer = configuration.GetSection("JwtIssuerOptions:Issuer").Value,
+					ValidIssuer = configuration["JwtIssuerOptions:Issuer"],
 					ValidateAudience = true,
-					ValidAudience = configuration.GetSection("JwtIssuerOptions:Audience").Value,
+					ValidAudience = configuration["JwtIssuerOptions:Audience"],
 					RequireExpirationTime = true,
 					ValidateLifetime = true,
 					ClockSkew = TimeSpan.Zero,
@@ -91,7 +104,7 @@ public static class DiManager
 		services.AddSwaggerGen(static swaggerGenOptions =>
 		{
 			swaggerGenOptions.SwaggerDoc("v1",
-				new() { Title = "HookahHelper API", Version = "v1" });
+				new() { Title = "MentorAI API", Version = "v1" });
 
 			swaggerGenOptions.DescribeAllParametersInCamelCase();
 

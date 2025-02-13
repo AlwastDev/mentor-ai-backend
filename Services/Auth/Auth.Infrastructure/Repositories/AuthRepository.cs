@@ -24,6 +24,16 @@ public class AuthRepository : RepositoryBase<User, UserDto>, IAuthRepository
         _userManager = userManager;
         _signInManager = signInManager;
     }
+
+    public async Task RegisterAsync(string userId, string password)
+    {
+        var user = await _context.Users.FindAsync(userId);
+
+        if (user is not null)
+        {
+            await _userManager.AddPasswordAsync(user, password);
+        }
+    }
     
     public async Task<IdentityResult> AddClaimsAsync(string userId, IEnumerable<Claim> claims)
     {
@@ -68,6 +78,16 @@ public class AuthRepository : RepositoryBase<User, UserDto>, IAuthRepository
         if (user is not null)
         {
             user.IsAuthTokenIssued = state;
+        }
+    }
+    
+    public async Task RevokeAllTokensAsync(string userId)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+        
+        if(user is not null)
+        {
+            await _userManager.UpdateSecurityStampAsync(user);
         }
     }
     

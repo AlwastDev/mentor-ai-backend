@@ -20,7 +20,8 @@ public class RefreshTokenHandler : IRequestHandler<RefreshTokenCommand, ResultRe
         _jwtFactory = jwtFactory;
     }
 
-    public async Task<ResultResponse<AccessTokenResponse>> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
+    public async Task<ResultResponse<AccessTokenResponse>> Handle(RefreshTokenCommand request,
+        CancellationToken cancellationToken)
     {
         if (!_jwtFactory.Validate(request.Token))
         {
@@ -28,7 +29,6 @@ public class RefreshTokenHandler : IRequestHandler<RefreshTokenCommand, ResultRe
         }
 
         var claims = _jwtFactory.Parse(request.Token);
-
         var userId = claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value;
 
         if (string.IsNullOrWhiteSpace(userId))
@@ -36,28 +36,26 @@ public class RefreshTokenHandler : IRequestHandler<RefreshTokenCommand, ResultRe
             return new(ResultCode.Forbidden);
         }
 
-        var user = await _authRepository.GetByIdAsync(Guid.Parse(userId));
+        var user = await _authRepository.GetByIdAsync(userId);
 
         if (user?.IsAuthTokenIssued != true)
         {
-            return new(ResultCode.UnAuthorize, "Invalid token");
+            return new(ResultCode.UnAuthorize, "Token is no longer valid");
         }
 
         await _authRepository.UpdateLastActivityAsync(user.Id);
-
         await _authRepository.CommitAsync();
 
         var userClaims = await _authRepository.GetClaimsAsync(user.Id);
-
         if (userClaims is null)
         {
             return new(ResultCode.InternalServerError, "Get claims error");
         }
 
         var accessToken = _jwtFactory.GenerateEncodedToken(userClaims, TokenType.AccessToken);
-
         var refreshToken = _jwtFactory.GenerateEncodedToken(
-            new List<Claim> { new(ClaimTypes.NameIdentifier, user.Id) }, TokenType.RefreshToken);
+            new List<Claim> { new(ClaimTypes.NameIdentifier, user.Id) },
+            TokenType.RefreshToken);
 
         var response = new AccessTokenResponse(accessToken, refreshToken);
 

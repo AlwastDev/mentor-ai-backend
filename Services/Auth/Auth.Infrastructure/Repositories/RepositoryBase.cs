@@ -62,13 +62,13 @@ public class RepositoryBase<K, T> : IRepositoryBase<K, T>
         return _mapper.Map<IReadOnlyList<T>>(result);
     }
 
-    public async Task<T?> GetByIdAsync(Guid id)
+    public async Task<T?> GetByIdAsync(string id)
     {
         var entity = await _context.Set<K>().FindAsync(id);
         return _mapper.Map<T?>(entity);
     }
 
-    public async Task<T> AddAsync(T dto)
+    public async Task<T> AddAsync(K dto)
     {
         var entity = _mapper.Map<K>(dto);
         _context.Set<K>().Add(entity);
@@ -76,14 +76,14 @@ public class RepositoryBase<K, T> : IRepositoryBase<K, T>
         return _mapper.Map<T>(entity);
     }
 
-    public async Task UpdateAsync(T dto)
+    public async Task UpdateAsync(K dto)
     {
         var entity = _mapper.Map<K>(dto);
         _context.Entry(entity).State = EntityState.Modified;
         await _context.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync(T dto)
+    public async Task DeleteAsync(K dto)
     {
         var entity = _mapper.Map<K>(dto);
         _context.Set<K>().Remove(entity);

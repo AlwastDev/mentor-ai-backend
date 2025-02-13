@@ -1,12 +1,17 @@
 using Auth.Domain.Common;
+using Auth.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Auth.Infrastructure.Persistence;
 
-public class AuthContext(DbContextOptions<AuthContext> options) : DbContext(options)
+public class AuthContext(DbContextOptions<AuthContext> options) : IdentityDbContext<User, IdentityRole, string>(options)
 {
-    public DbSet<Domain.Entities.User> Users { get; set; }
-
+    public DbSet<Student> Students { get; set; }
+    public DbSet<User> Users { get; set; }
+    public DbSet<IdentityUserLogin<string>> UserLogins { get; set; }
+    
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
     {
         foreach (var entry in ChangeTracker.Entries<EntityBase>())

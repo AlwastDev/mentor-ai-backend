@@ -5,6 +5,7 @@ using System.Security.Claims;
 using Auth.Application.Features.Auth.Login;
 using Auth.Application.Features.Auth.Logout;
 using Auth.Application.Features.Auth.RefreshToken;
+using Auth.Application.Features.Auth.Register;
 using Auth.Application.Responses;
 using MediatR;
 using MentorAI.Shared;
@@ -26,13 +27,25 @@ public class AuthController : ControllerBase
 		_mediator = mediator;
 	}
 	
+	[HttpPost, Route("register")]
+	[ProducesResponseType(StatusCodes.Status200OK)]
+	[ProducesResponseType(typeof(ValidationResultModel), StatusCodes.Status400BadRequest)]
+	[ProducesResponseType(StatusCodes.Status403Forbidden)]
+	[ProducesResponseType(StatusCodes.Status409Conflict)]
+	[AllowAnonymous]
+	public async Task<IActionResult> RegisterAsync([FromBody, Required] RegisterCommand command)
+	{
+		var result = await _mediator.Send(command);
+		
+		return _presenter.Handle(result);
+	}
+	
 	[HttpPost, Route("login")]
 	[ProducesResponseType(typeof(AccessTokenResponse), StatusCodes.Status200OK)]
 	[ProducesResponseType(typeof(ValidationResultModel), StatusCodes.Status400BadRequest)]
 	[ProducesResponseType(StatusCodes.Status403Forbidden)]
 	[ProducesResponseType(StatusCodes.Status409Conflict)]
 	[AllowAnonymous]
-	[ProducesDefaultResponseType]
 	public async Task<IActionResult> LoginAsync([FromBody, Required] LoginCommand command)
 	{
 		var result = await _mediator.Send(command);

@@ -10,6 +10,7 @@ public static class MapperDi
 		var mappingConfig = new MapperConfiguration(mapperConfigurationExpression =>
 		{
 			mapperConfigurationExpression.AddProfile(new UserMapper());
+			mapperConfigurationExpression.AddProfile(new StudentMapper());
 		});
 
 		var mapper = mappingConfig.CreateMapper();

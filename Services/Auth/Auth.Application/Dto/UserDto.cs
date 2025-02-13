@@ -7,6 +7,7 @@ public class UserDto : EntityBase
     public string? Surname { get; set; }
     public string Email { get; set; }
     public bool IsAuthTokenIssued { get; set; }
+    public string? SecurityStamp { get; set; }
     
     public RoleType UserRole { get; set; }
     public DateTime? LastActivityDate { get; set; }

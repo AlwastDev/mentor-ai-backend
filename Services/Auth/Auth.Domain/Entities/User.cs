@@ -13,6 +13,7 @@ public class User : IdentityUser
     [ProtectedPersonalData] public string? Surname { get; set; }
     [ProtectedPersonalData] public string Email { get; set; }
     [ProtectedPersonalData] public bool IsAuthTokenIssued { get; set; }
+    
     public string Discriminator { get; set; }
 
     [ProtectedPersonalData] public DateTime CreationDate { get; set; }
