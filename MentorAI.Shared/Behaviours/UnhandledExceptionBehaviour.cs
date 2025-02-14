@@ -1,6 +1,7 @@
 using MediatR;
+using Microsoft.Extensions.Logging;
 
-namespace Auth.Application.Behaviours;
+namespace MentorAI.Shared.Behaviours;
 
 public class UnhandledExceptionBehaviour<TRequest, TResponse>(ILogger<TRequest> logger)
     : IPipelineBehavior<TRequest, TResponse>

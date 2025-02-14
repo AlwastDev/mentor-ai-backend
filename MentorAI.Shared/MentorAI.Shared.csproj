@@ -5,9 +5,13 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <RootNamespace>MentorAI.Shared</RootNamespace>
+        <OutputType>Library</OutputType>
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="FluentValidation" Version="11.11.0" />
+        <PackageReference Include="MassTransit" Version="8.3.6" />
+        <PackageReference Include="MediatR" Version="12.4.1" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.2" />
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="7.2.0" />
     </ItemGroup>

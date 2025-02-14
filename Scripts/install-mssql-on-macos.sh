@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SERVICES=("auth")
+SERVICES=(auth course)
 SA_PASSWORD="QsHdvFYoDu788zw"
 BASE_PORT=1434
 

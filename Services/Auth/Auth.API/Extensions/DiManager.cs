@@ -104,7 +104,7 @@ public static class DiManager
 		services.AddSwaggerGen(static swaggerGenOptions =>
 		{
 			swaggerGenOptions.SwaggerDoc("v1",
-				new() { Title = "MentorAI API", Version = "v1" });
+				new() { Title = "MentorAI Auth service API", Version = "v1" });
 
 			swaggerGenOptions.DescribeAllParametersInCamelCase();
 

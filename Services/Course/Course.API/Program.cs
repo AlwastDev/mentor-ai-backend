@@ -1,52 +1,20 @@
-using Auth.API.Extensions;
-using Auth.Application;
-using Auth.Domain.Common;
-using Auth.Infrastructure;
-using Auth.Infrastructure.Auth;
-using Auth.Infrastructure.Persistence;
 using Common.Logging;
+using Course.API.Extensions;
+using Course.Infrastructure;
+using Course.Infrastructure.Persistence;
 using HealthChecks.UI.Client;
 using MassTransit;
 using MentorAI.Shared;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Microsoft.AspNetCore.Mvc;
 using Serilog;
-using GuidConverter = MentorAI.Shared.Serialization.GuidConverter;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // builder.Services.AddGrpcClient<CustomerProtoService.CustomerProtoServiceClient>(c => c.Address = new Uri(builder.Configuration["GrpcSettings:CustomerUrl"]!));
 // builder.Services.AddScoped<CustomerGrpcService>();
-builder.Services.AddApplicationServices();
-builder.Services.AddJwtAuthentication(builder.Configuration);
-builder.Services.AddSingleton<IAuthorizationHandler, RoleHandler>();
 builder.Services.AddSingleton<Presenter>();
-builder.Services.AddJwt();
-builder.Services.AddOptions(builder.Configuration);
-builder.Services.AddIdentity();
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddSwagger();
-
-builder.Services.AddMvcCore(static mvcOptions => mvcOptions.EnableEndpointRouting = false)
-    .AddJsonOptions(static jsonOptions =>
-    {
-        jsonOptions.JsonSerializerOptions.Converters.Add(new GuidConverter());
-    })
-    .AddAuthorization(static options =>
-    {
-        options.AddPolicy(RoleType.Student.ToString(),
-            static policy => policy.Requirements.Add(new RoleRequirement(RoleType.Student.ToString())));
-    })
-    .ConfigureApiBehaviorOptions(static options =>
-        options.InvalidModelStateResponseFactory = static actionContext =>
-        {
-            var modelState = actionContext.ModelState;
-
-            return new BadRequestObjectResult(ValidationHelper.FormatOutput(modelState));
-        })
-    .AddDataAnnotations()
-    .AddApiExplorer();
 
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddMapper();
@@ -80,10 +48,10 @@ builder.Host.UseSerilog(SeriLogger.Configure);
 
 var app = builder.Build();
 
-app.MigrateDatabase<AuthContext>((context, services) =>
+app.MigrateDatabase<CourseContext>((context, services) =>
 {
-    var logger = services.GetService<ILogger<AuthContextSeed>>();
-    AuthContextSeed
+    var logger = services.GetService<ILogger<CourseContextSeed>>();
+    CourseContextSeed
         .SeedAsync(context, logger!)
         .Wait();
 });

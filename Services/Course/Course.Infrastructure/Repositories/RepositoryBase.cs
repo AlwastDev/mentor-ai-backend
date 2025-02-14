@@ -1,19 +1,20 @@
 using System.Linq.Expressions;
-using Auth.Application.Contracts.Persistence;
-using Auth.Infrastructure.Persistence;
 using AutoMapper;
+using Course.Application.Contracts.Persistence;
+using Course.Infrastructure.Persistence;
+using MentorAI.Shared;
 using Microsoft.EntityFrameworkCore;
 
-namespace Auth.Infrastructure.Repositories;
+namespace Course.Infrastructure.Repositories;
 
 public class RepositoryBase<K, T> : IRepositoryBase<K, T>
     where K : class
-    where T : class
+    where T : EntityBase
 {
-    private readonly AuthContext _context;
+    private readonly CourseContext _context;
     private readonly IMapper _mapper;
 
-    public RepositoryBase(AuthContext dbContext, IMapper mapper)
+    public RepositoryBase(CourseContext dbContext, IMapper mapper)
     {
         _context = dbContext;
         _mapper = mapper;

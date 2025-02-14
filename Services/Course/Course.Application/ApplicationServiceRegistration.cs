@@ -2,8 +2,9 @@ using System.Reflection;
 using FluentValidation;
 using MediatR;
 using MentorAI.Shared.Behaviours;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace Auth.Application;
+namespace Course.Application;
 
 public static class ApplicationServiceRegistration
 {

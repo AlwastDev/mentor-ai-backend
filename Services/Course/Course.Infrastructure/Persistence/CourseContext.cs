@@ -1,16 +1,12 @@
-using Auth.Domain.Entities;
+using Course.Domain.Entities;
 using MentorAI.Shared;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Auth.Infrastructure.Persistence;
+namespace Course.Infrastructure.Persistence;
 
-public class AuthContext(DbContextOptions<AuthContext> options) : IdentityDbContext<User, IdentityRole, string>(options)
+public class CourseContext(DbContextOptions<CourseContext> options): DbContext(options)
 {
-    public DbSet<Student> Students { get; set; }
-    public DbSet<User> Users { get; set; }
-    public DbSet<IdentityUserLogin<string>> UserLogins { get; set; }
+    public DbSet<Test> Tests { get; set; }
     
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
     {

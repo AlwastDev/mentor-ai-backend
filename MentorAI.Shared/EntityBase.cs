@@ -1,4 +1,4 @@
-namespace Auth.Domain.Common;
+namespace MentorAI.Shared;
 
 public abstract class EntityBase
 {

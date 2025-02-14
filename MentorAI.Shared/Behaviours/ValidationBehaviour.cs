@@ -1,7 +1,7 @@
 using FluentValidation;
 using MediatR;
 
-namespace Auth.Application.Behaviours;
+namespace MentorAI.Shared.Behaviours;
 
 public class ValidationBehaviour<TRequest, TResponse>(IEnumerable<IValidator<TRequest>> validators)
     : IPipelineBehavior<TRequest, TResponse>
