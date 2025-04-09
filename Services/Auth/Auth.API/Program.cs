@@ -16,8 +16,6 @@ using GuidConverter = MentorAI.Shared.Serialization.GuidConverter;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// builder.Services.AddGrpcClient<CustomerProtoService.CustomerProtoServiceClient>(c => c.Address = new Uri(builder.Configuration["GrpcSettings:CustomerUrl"]!));
-// builder.Services.AddScoped<CustomerGrpcService>();
 builder.Services.AddApplicationServices();
 builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddSingleton<IAuthorizationHandler, RoleHandler>();

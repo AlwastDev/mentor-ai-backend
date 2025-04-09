@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Grpc.AspNetCore" Version="2.67.0" />
         <PackageReference Include="AutoMapper" Version="13.0.1" />
         <PackageReference Include="FluentValidation" Version="11.11.0" />
         <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0" />
@@ -26,5 +27,11 @@
 
     <ItemGroup>
       <Folder Include="Responses\" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Protobuf Include="..\..\Auth\Auth.GRPC\Protos\auth.proto" GrpcServices="Client">
+            <Link>Protos\auth.proto</Link>
+        </Protobuf>
     </ItemGroup>
 </Project>

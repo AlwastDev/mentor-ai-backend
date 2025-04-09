@@ -30,7 +30,7 @@ public class StudentSubscriptionRepository : RepositoryBase<StudentSubscription,
     public async Task<StudentSubscriptionDto> AddSubscriptionAsync(StudentSubscriptionDto dto)
     {
         var entity = _mapper.Map<StudentSubscription>(dto);
-        _context.StudentSubscriptions.Add(entity);
+        await _context.StudentSubscriptions.AddAsync(entity);
         await CommitAsync();
         return _mapper.Map<StudentSubscriptionDto>(entity);
     }
@@ -57,7 +57,6 @@ public class StudentSubscriptionRepository : RepositoryBase<StudentSubscription,
 
         _context.StudentSubscriptions.Update(entity);
         await CommitAsync();
-
         return _mapper.Map<StudentSubscriptionDto>(entity);
     }
 

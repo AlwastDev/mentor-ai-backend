@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option csharp_namespace = "Auth.GRPC.Protos";
+
+service AuthProtoService {
+  rpc CheckStudentExists (CheckStudentRequest) returns (CheckStudentResponse);
+}
+
+message CheckStudentRequest {
+  string studentId = 1;
+}
+
+message CheckStudentResponse {
+  bool exists = 1;
+}

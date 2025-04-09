@@ -4,7 +4,7 @@ public class StudentSubscriptionDto
 {
     public Guid Id { get; set; }
     public Guid PlanId { get; set; }
-    public Guid StudentId { get; set; }
+    public string StudentId { get; set; }
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
 

@@ -15,7 +15,7 @@ namespace Auth.API.Extensions;
 
 public static class DiManager
 {
-    internal static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
 	{
 		var secretKey = configuration["JwtIssuerOptions:SecretKey"];
 
@@ -79,7 +79,7 @@ public static class DiManager
 		return services;
 	}
     
-	internal static IServiceCollection AddOptions(this IServiceCollection services, IConfiguration configuration)
+	public static IServiceCollection AddOptions(this IServiceCollection services, IConfiguration configuration)
 	{
 		var jwtAppSettingOptions = configuration.GetSection(nameof(JwtIssuerOptions));
 
@@ -100,7 +100,7 @@ public static class DiManager
 		return services;
 	}
     
-	internal static IServiceCollection AddSwagger(this IServiceCollection services) =>
+	public static IServiceCollection AddSwagger(this IServiceCollection services) =>
 		services.AddSwaggerGen(static swaggerGenOptions =>
 		{
 			swaggerGenOptions.SwaggerDoc("v1",
@@ -121,11 +121,11 @@ public static class DiManager
 			swaggerGenOptions.IncludeXmlComments(xmlPath);
 		});
 	
-	internal static IServiceCollection AddJwt(this IServiceCollection services) =>
+	public static IServiceCollection AddJwt(this IServiceCollection services) =>
 		services.AddScoped<IJwtFactory, JwtFactory>()
 			.AddScoped<IJwtTokenHandler, JwtTokenHandler>();
 	
-	internal static IServiceCollection AddIdentity(this IServiceCollection services)
+	public static IServiceCollection AddIdentity(this IServiceCollection services)
 	{
 		services.AddIdentityCore<User>(identityOptions =>
 			{

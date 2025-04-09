@@ -12,12 +12,13 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using Subscription.Application;
+using Auth.GRPC.Protos;
 using GuidConverter = MentorAI.Shared.Serialization.GuidConverter;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// builder.Services.AddGrpcClient<CustomerProtoService.CustomerProtoServiceClient>(c => c.Address = new Uri(builder.Configuration["GrpcSettings:CustomerUrl"]!));
-// builder.Services.AddScoped<CustomerGrpcService>();
+builder.Services.AddGrpcClient<AuthProtoService.AuthProtoServiceClient>(c => c.Address = new Uri(builder.Configuration["GrpcSettings:AuthUrl"]!));
+builder.Services.AddScoped<AuthGrpcService>();
 builder.Services.AddSingleton<Presenter>();
 builder.Services.AddApplicationServices();
 builder.Services.AddSingleton<IAuthorizationHandler, RoleHandler>();

@@ -8,6 +8,7 @@ public class StudentSubscriptionMapper : Profile
 {
     public StudentSubscriptionMapper()
     {
-        CreateMap<StudentSubscription, StudentSubscriptionDto>();
+        CreateMap<StudentSubscription, StudentSubscriptionDto>()
+            .ReverseMap();
     }
 }
