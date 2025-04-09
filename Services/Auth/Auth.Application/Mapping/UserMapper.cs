@@ -1,7 +1,7 @@
 using Auth.Application.Dto;
-using Auth.Domain.Common;
 using Auth.Domain.Entities;
 using AutoMapper;
+using MentorAI.Shared.Enumerations;
 
 namespace Auth.Application.Mapping;
 

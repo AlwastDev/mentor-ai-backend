@@ -59,22 +59,15 @@ public class LoginHandler : IRequestHandler<LoginCommand, ResultResponse<AccessT
             await _authRepository.AddClaimsAsync(user.Id,
             [
                 new Claim(ClaimTypes.NameIdentifier, user.Id),
-                new Claim(ClaimTypes.Role, user.UserRole.ToString()),
+                    new Claim(ClaimTypes.Role, user.UserRole.ToString())
             ]);
 
             await _authRepository.CommitAsync();
         }
 
-        userClaims = userClaims
-            .Where(claim => !(claim.Type == ClaimTypes.Role && claim.Value != user.UserRole.ToString())).ToList();
-
         var accessToken = _jwtFactory.GenerateEncodedToken(userClaims, TokenType.AccessToken);
 
-        var refreshToken = _jwtFactory.GenerateEncodedToken(
-            new List<Claim>
-            {
-                new(ClaimTypes.NameIdentifier, user.Id),
-            },
+        var refreshToken = _jwtFactory.GenerateEncodedToken(new List<Claim> { new(ClaimTypes.NameIdentifier, user.Id) },
             TokenType.RefreshToken);
 
         var response = new AccessTokenResponse(accessToken, refreshToken);

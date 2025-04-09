@@ -1,13 +1,13 @@
 using Auth.API.Extensions;
 using Auth.Application;
-using Auth.Domain.Common;
 using Auth.Infrastructure;
-using Auth.Infrastructure.Auth;
 using Auth.Infrastructure.Persistence;
 using Common.Logging;
 using HealthChecks.UI.Client;
 using MassTransit;
 using MentorAI.Shared;
+using MentorAI.Shared.Auth;
+using MentorAI.Shared.Enumerations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Mvc;
@@ -37,6 +37,8 @@ builder.Services.AddMvcCore(static mvcOptions => mvcOptions.EnableEndpointRoutin
     {
         options.AddPolicy(RoleType.Student.ToString(),
             static policy => policy.Requirements.Add(new RoleRequirement(RoleType.Student.ToString())));
+        options.AddPolicy(RoleType.Admin.ToString(),
+            static policy => policy.Requirements.Add(new RoleRequirement(RoleType.Admin.ToString())));
     })
     .ConfigureApiBehaviorOptions(static options =>
         options.InvalidModelStateResponseFactory = static actionContext =>

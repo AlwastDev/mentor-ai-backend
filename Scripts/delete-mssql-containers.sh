@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "🔍 Searching for MSSQL containers running"
-MSSQL_CONTAINERS=$(docker ps -a --filter "ancestor=mcr.microsoft.com/mssql/server" --format "{{.ID}} {{.Names}} {{.Ports}}" | grep -E "1434|1435|1436")
+MSSQL_CONTAINERS=$(docker ps -a --filter "ancestor=mcr.microsoft.com/mssql/server" --format "{{.ID}} {{.Names}} {{.Ports}}" | grep -E "1434|1435|1436|1437")
 
 if [ -z "$MSSQL_CONTAINERS" ]; then
     echo "✅ No MSSQL containers found. Exiting..."
@@ -19,6 +19,6 @@ if [[ "$CONFIRM" != "yes" ]]; then
 fi
 
 echo "🚀 Stopping and removing the selected MSSQL containers..."
-docker ps -a --filter "ancestor=mcr.microsoft.com/mssql/server" --format "{{.ID}} {{.Ports}}" | grep -E "1434|1435|1436" | awk '{print $1}' | xargs docker rm -f
+docker ps -a --filter "ancestor=mcr.microsoft.com/mssql/server" --format "{{.ID}} {{.Ports}}" | grep -E "1434|1435|1436|1437" | awk '{print $1}' | xargs docker rm -f
 
 echo "✅ Selected MSSQL containers have been removed!"

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SERVICES=(auth course)
+SERVICES=(auth course gamification subscription)
 SA_PASSWORD="QsHdvFYoDu788zw"
 BASE_PORT=1434
 

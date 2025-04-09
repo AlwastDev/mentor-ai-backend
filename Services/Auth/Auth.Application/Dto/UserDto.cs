@@ -1,4 +1,4 @@
-using Auth.Domain.Common;
+using MentorAI.Shared.Enumerations;
 
 namespace Auth.Application.Dto;
 

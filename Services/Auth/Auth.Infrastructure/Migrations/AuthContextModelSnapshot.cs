@@ -30,6 +30,9 @@ namespace Auth.Infrastructure.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<int>("Coins")
+                        .HasColumnType("int");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -49,6 +52,9 @@ namespace Auth.Infrastructure.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<int>("Experience")
+                        .HasColumnType("int");
 
                     b.Property<bool>("IsAuthTokenIssued")
                         .HasColumnType("bit");
@@ -246,6 +252,13 @@ namespace Auth.Infrastructure.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("Auth.Domain.Entities.Admin", b =>
+                {
+                    b.HasBaseType("Auth.Domain.Entities.User");
+
+                    b.HasDiscriminator().HasValue("Admin");
                 });
 
             modelBuilder.Entity("Auth.Domain.Entities.Student", b =>

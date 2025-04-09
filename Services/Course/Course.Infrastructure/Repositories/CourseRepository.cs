@@ -16,6 +16,4 @@ public class CourseRepository : RepositoryBase<Test, TestDto>, ICourseRepository
     {
         _context = context;
     }
-
-    
 }

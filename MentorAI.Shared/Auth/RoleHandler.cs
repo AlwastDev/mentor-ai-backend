@@ -1,7 +1,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Auth.Infrastructure.Auth;
+namespace MentorAI.Shared.Auth;
 
 public class RoleHandler : AuthorizationHandler<RoleRequirement>
 {

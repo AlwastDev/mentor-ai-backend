@@ -6,7 +6,22 @@ namespace Course.Infrastructure.Persistence;
 
 public class CourseContext(DbContextOptions<CourseContext> options): DbContext(options)
 {
+    public DbSet<Answer> Answers { get; set; }
+    
+    public DbSet<LearningMaterial> LearningMaterials { get; set; }
+    public DbSet<Question> Questions { get; set; }
+    public DbSet<Roadmap> Roadmaps { get; set; }
+    public DbSet<StudentAnswer> StudentAnswers { get; set; }
     public DbSet<Test> Tests { get; set; }
+    public DbSet<TestAttempt> TestAttempts { get; set; }
+    
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(CourseContext).Assembly);
+    }
+
     
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
     {
